@@ -1,10 +1,5 @@
 <?php
-session_start();
-
-if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
-    header("Location: http://localhost:8080/user/dashboard/index.php");
-    exit();
-}
+require_once __DIR__ . '/app/middleware/guest_middleware.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,75 +11,85 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
+    <script>
+        const APP_URL = "<?php echo getenv('APP_URL'); ?>";
+    </script>
 </head>
 <body>
-    <div class="wrapper" style="display: none;">
-        <h1>Register</h1>
-        <form id="userForm" method="POST" action="/auth.php?action=register">
-            <label for="username">Nama Pengguna:</label>
-            <div class="input-wrapper">
-                <input type="text" id="username" name="username" required><br>
-            </div>
-            <label for="password">Password:</label>
-            <div class="input-wrapper">
-                <input type="password" id="password" name="password" required>
-                <span class="toggle-password"><i class="fa-solid fa-eye icon-password"></i></span>
-            </div>
-            <br>
-
-            <label>Jenis Kelamin:</label>
-            <div class="radio"></div>
-            <div class="radio-group">
-                <div>
-                    <input type="radio" id="male" name="gender" value="Male" required>
-                    <label for="male">Laki-Laki</label>
+    <div class="body-wrapper">
+        <div class="wrapper" style="display: none;">
+            <h1>Register</h1>
+            <form id="userForm" method="POST" action="/auth.php?action=register">
+                <label for="username">Nama Pengguna:</label>
+                <div class="input-wrapper username-wrapper">
+                    <input type="text" id="username" name="username" required><br>
                 </div>
-                <div>
-                    <input type="radio" id="female" name="gender" value="Female" required>
-                    <label for="female">Perempuan</label>
+                <label for="password">Password:</label>
+                <div class="input-wrapper password-wrapper">
+                    <input type="password" id="password" name="password" required>
+                    <span class="toggle-password"><i class="fa-solid fa-eye icon-password"></i></span>
                 </div>
-            </div>
-            <br>
+                <label for="password">Confirm Password:</label>
+                <div class="input-wrapper password-confirm-wrapper">
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    <span class="toggle-confirm-password"><i class="fa-solid fa-eye icon-confirm-password"></i></span>
+                </div>
+                <br>
 
-            <label for="city">Kota:</label>
-            <select id="city" name="city" required>
-                <option value="Bandar Lampung">Bandar Lampung</option>
-                <option value="Jakarta">Jakarta</option>
-                <option value="Surabaya">Surabaya</option>
-            </select><br>
+                <label>Jenis Kelamin:</label>
+                <div class="radio"></div>
+                <div class="radio-group">
+                    <div>
+                        <input type="radio" id="male" name="gender" value="Male" required>
+                        <label for="male">Laki-Laki</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="female" name="gender" value="Female" required>
+                        <label for="female">Perempuan</label>
+                    </div>
+                </div>
+                <br>
 
-            <label class="agree">
-                <input type="checkbox" id="agree" name="agree" required> Setuju dengan syarat dan ketentuan
-            </label><br>
+                <label for="city">Kota:</label>
+                <select id="city" name="city" required>
+                    <option value="Bandar Lampung">Bandar Lampung</option>
+                    <option value="Jakarta">Jakarta</option>
+                    <option value="Surabaya">Surabaya</option>
+                </select><br>
 
-            <div id="error-message" style="color: red;"></div>
-            <div class="change-form">
-                <p>Have an account? <span class="change">Login</span></p>
-            </div>
-            <button type="submit">Register</button>
-        </form>
-    </div>
+                <label class="agree">
+                    <input type="checkbox" id="agree" name="agree" required> Setuju dengan syarat dan ketentuan
+                </label><br>
 
-    <div class="wrapper">
-        <h1>Login</h1>
-        <form id="loginForm" method="POST" action="/auth.php?action=login">
-            <label for="login-username">Nama Pengguna:</label>
-            <div class="input-wrapper">
-                <input type="text" id="login-username" name="username" required><br>
-            </div>
-            <label for="login-password">Password:</label>
-            <div class="input-wrapper">
-                <input type="password" id="login-password" name="password" required>
-                <span class="toggle-password"><i class="fa-solid fa-eye icon-password"></i></span>
-            </div>
-            <br>
+                <div id="error-message" style="color: red;"></div>
+                <div class="change-form">
+                    <p>Have an account? <span class="change">Login</span></p>
+                </div>
+                <button type="submit">Register</button>
+            </form>
+        </div>
 
-            <div id="login-error-message" style="color: red;"></div>
-            <div class="change-form">
-                <p>Don't have an account? <span class="change">Register</span></p>
-            </div>
-            <button type="submit">Login</button>
-        </form>
+        <div class="wrapper">
+            <h1>Login</h1>
+            <form id="loginForm" method="POST" action="/auth.php?action=login">
+                <label for="login-username">Nama Pengguna:</label>
+                <div class="input-wrapper">
+                    <input type="text" id="login-username" name="username" required><br>
+                </div>
+                <label for="login-password">Password:</label>
+                <div class="input-wrapper">
+                    <input type="password" id="login-password" name="password" required>
+                    <span class="toggle-password"><i class="fa-solid fa-eye icon-password"></i></span>
+                </div>
+                <br>
+
+                <div id="login-error-message" style="color: red;"></div>
+                <div class="change-form">
+                    <p>Don't have an account? <span class="change">Register</span></p>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -102,21 +107,52 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
                 }
             });
 
+            $(".toggle-confirm-password").on("click", function () {
+                var passwordField = $(this).siblings("input");
+                var toggleIcon = $(".icon-confirm-password");
+
+                if (passwordField.attr("type") === "password") {
+                    passwordField.attr("type", "text");
+                    toggleIcon.removeClass("fa-eye").addClass("fa-eye-slash");
+                } else {
+                    passwordField.attr("type", "password");
+                    toggleIcon.removeClass("fa-eye-slash").addClass("fa-eye");
+                }
+            });
+
             $(".change").on("click", function() {
                 $(".wrapper").toggle();
             });
 
+            $.validator.addMethod("passwordPattern", function(value, element) {
+                return this.optional(element) || /^(?=.*[A-Z])(?=.*[!@#$%^&*])/.test(value);
+            }, "Password must contain at least one uppercase letter and one special character");
+
             $("#userForm").validate({
                 rules: {
-                    username: "required",
-                    password: "required",
+                    username: {
+                        required: true,
+                        minlength: 3
+                    },
+                    password: {
+                        required: true,
+                        minlength: 8,
+                        passwordPattern: true
+                    },
                     gender: "required",
                     city: "required",
                     agree: "required"
                 },
                 messages: {
-                    username: "Please enter your username",
-                    password: "Please enter your password",
+                    username: {
+                        required: "Please enter your username",
+                        minlength: "Username must be at least 3 characters"
+                    },
+                    password: {
+                        required: "Please enter your password",
+                        minlength: "Password must be at least 8 characters",
+                        passwordPattern: "Password must contain at least one uppercase letter and one special character"
+                    },
                     gender: "Please select your gender",
                     city: "Please select your city",
                     agree: "You must agree to the terms and conditions"
@@ -137,7 +173,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
                         data: $(form).serialize(),
                         success: function(response) {
                             if (response.trim() === "Registration succeeded.") {
-                                window.location.href = "http://localhost:8080/user/dashboard";
+                               $(".wrapper").toggle();
                             } else {
                                 $("#error-message").text(response);
                             }
@@ -165,7 +201,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
                         data: $(form).serialize(),
                         success: function(response) {
                             if (response.trim() === "Login succeeded.") {
-                                window.location.href = "http://localhost:8080/user/dashboard";
+                                window.location.href = APP_URL + "/user/dashboard";
                             } else {
                                 $("#login-error-message").text(response);
                             }

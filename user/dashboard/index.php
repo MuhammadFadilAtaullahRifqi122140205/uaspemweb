@@ -1,16 +1,9 @@
 <?php
+require_once __DIR__ . '/../../app/middleware/auth_middleware.php';
 require_once __DIR__ . '/../../app/controller/user/user_controller.php';
-session_start();
 
-if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    header("Location: ../../");
-    exit();
-}
-
-// Instantiate the UserController
 $userController = new UserController();
 
-// Fetch user data using the UserController
 $users = $userController->getAllUsers();
 ?>
 <!DOCTYPE html>
@@ -22,27 +15,23 @@ $users = $userController->getAllUsers();
     <link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="sidebar">
-            <h2>User Dashboard</h2>
-            <a href="#">Home</a>
-            <a href="#">Profile</a>
-            <a href="#">Settings</a>
-            <form method="POST" action="/auth.php?action=logout">
-                <button type="submit" class="btn btn-link">Logout</button>
-            </form>
-        </div>
-
-        <div class="navbar">
-            <a href="#">Home</a>
-            <a href="#">Profile</a>
-            <a href="#">Settings</a>
-            <form method="POST" action="/auth.php?action=logout" style="display: inline;">
-                <button type="submit" class="btn btn-link">Logout</button>
-            </form>
-        </div>
-
-        <main></main>
+    <div class="layout">
+        <?php include __DIR__ . '/../components/navbar.php'; ?>
+        <main>
+            <div>
+                <h2>All Books</h2>
+                <div class="cards">
+                    <?php for ($i = 1; $i <= 10; $i++): ?>
+                        <div class="card">
+                            <h3>Book Title <?php echo $i; ?></h3>
+                            <p>Author: Author <?php echo $i; ?></p>
+                            <p>Description: This is a description for book <?php echo $i; ?>.</p>
+                        </div>
+                    <?php endfor; ?>
+                </div>
+            </div>
+        </main>
     </div>
+    <?php include __DIR__ . '/../components/footer.php'; ?>
 </body>
 </html>

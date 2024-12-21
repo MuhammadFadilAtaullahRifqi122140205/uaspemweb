@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../database/db.php';
+require_once __DIR__ . '/../../../app/config/env_loader.php';
 
 class AuthController extends Connection {
     public function __construct() {
@@ -62,7 +63,7 @@ class AuthController extends Connection {
         session_start();
         session_unset();
         session_destroy();
-        header("Location: http://localhost:8080/");
+        header("Location: " . getenv('APP_URL'));
     }
 
     public function register($username, $password, $gender, $city, $ip, $browser) {
