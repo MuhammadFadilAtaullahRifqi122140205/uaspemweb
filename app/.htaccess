@@ -1,0 +1,12 @@
+# Deny all access to the 'app' directory
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^.*$ - [F,L]
+</IfModule>
+
+# Deny access for all other methods
+
+<Files \*>
+Deny from all
+</Files>
