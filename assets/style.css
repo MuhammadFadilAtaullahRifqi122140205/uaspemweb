@@ -103,7 +103,7 @@ button {
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.1s;
 }
 
 button:hover {
@@ -177,7 +177,7 @@ button:hover {
   margin-bottom: 10px;
   padding: 10px;
   border-radius: 5px;
-  transition: background-color 0.3s;
+  transition: background-color 0.1s;
 }
 
 .sidebar .btn-link {
@@ -189,7 +189,8 @@ button:hover {
 }
 
 .sidebar a:hover {
-  background-color: #f0f4f8;
+  background-color: #bcd8d3;
+  color: #ffffff;
 }
 
 .sidebar button {
@@ -334,6 +335,17 @@ footer {
   border-top: 1px solid #444;
   margin-top: 20px;
   font-size: 14px;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-link-active {
+  background-color: #bcd8d3 !important;
+  color: #ffffff !important;
 }
 
 /* Responsive Styles */

@@ -1,7 +1,6 @@
 <?php
-require_once __DIR__ . '/../../database/db.php';
-
-class UserController extends Connection {
+require_once __DIR__ . '/../base_controller.php';
+class UserController extends BaseController {
     public function __construct() {
         parent::__construct();
     }

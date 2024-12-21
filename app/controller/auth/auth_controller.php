@@ -1,13 +1,56 @@
 <?php
-require_once __DIR__ . '/../../database/db.php';
-require_once __DIR__ . '/../../../app/config/env_loader.php';
+require_once __DIR__ . '/../base_controller.php';
 
-class AuthController extends Connection {
+class AuthController extends BaseController {
+    private $redis;
+
     public function __construct() {
         parent::__construct();
+        $this->initRedisSession();
     }
 
+    private function initRedisSession() {
+        $this->redis = new Redis();
+        $this->redis->connect(getenv("REDIS_HOST"), getenv("REDIS_PORT"));
+
+        $sessionPrefix = "PHPREDIS_SESSION:";
+        session_set_save_handler(
+            function ($savePath, $sessionName) {
+                return true;
+            },
+            // Close handler
+            function () {
+                return true;
+            },
+            // Read handler
+            function ($sessionId) use ($sessionPrefix) {
+                return $this->redis->get($sessionPrefix . $sessionId) ?: '';
+            },
+            // Write handler
+            function ($sessionId, $sessionData) use ($sessionPrefix) {
+                $lifetime = ini_get('session.gc_maxlifetime');
+                return $this->redis->setex($sessionPrefix . $sessionId, $lifetime, $sessionData);
+            },
+            // Destroy handler
+            function ($sessionId) use ($sessionPrefix) {
+                return $this->redis->del($sessionPrefix . $sessionId) > 0;
+            },
+            // Garbage collection handler
+            function ($maxLifetime) {
+                return true;
+            }
+        );
+
+        session_start();
+    }
+
+
     public function handleRequest($action, $data) {
+        if (!$this->verifyCsrfToken($data['csrf_token'])) {
+            echo "Invalid CSRF token.";
+            return;
+        }
+
         $username = htmlspecialchars($data['username'], ENT_QUOTES, 'UTF-8');
         $password = htmlspecialchars($data['password'], ENT_QUOTES, 'UTF-8');
         $gender = htmlspecialchars($data['gender'], ENT_QUOTES, 'UTF-8');
@@ -30,7 +73,7 @@ class AuthController extends Connection {
             } else {
                 echo $result;
             }
-        }elseif ($action === 'logout') {
+        } elseif ($action === 'logout') {
             $this->logout();
         }
     }
@@ -47,9 +90,8 @@ class AuthController extends Connection {
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($user && password_verify($password, $user['password'])) {
-                session_start();
                 $_SESSION['logged_in'] = true;
-                $_SESSION['username'] = $user['username'];
+                $_SESSION['user'] = $user;
                 return true;
             } else {
                 return "Login failed. Invalid credentials.";
@@ -60,7 +102,6 @@ class AuthController extends Connection {
     }
 
     public function logout() {
-        session_start();
         session_unset();
         session_destroy();
         header("Location: " . getenv('APP_URL'));
@@ -91,7 +132,7 @@ class AuthController extends Connection {
                 if (strpos($errorMessage, 'for key \'username\'') !== false) {
                     return "Registration failed: Username already exists.";
                 } elseif (strpos($errorMessage, 'for key \'ip_address\'') !== false) {
-                    return "Registration failed: User with this ip address already exists.";
+                    return "Registration failed: User with this IP address already exists.";
                 } else {
                     return "Registration failed: Duplicate entry.";
                 }

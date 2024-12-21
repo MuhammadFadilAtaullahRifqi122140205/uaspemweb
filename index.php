@@ -1,5 +1,9 @@
 <?php
 require_once __DIR__ . '/app/middleware/guest_middleware.php';
+require_once __DIR__ . '/app/controller/auth/auth_controller.php';
+
+$authController = new AuthController();
+$crsfToken = $authController->generateCsrfToken();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -7,7 +11,7 @@ require_once __DIR__ . '/app/middleware/guest_middleware.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UAS Pemrograman Web</title>
-    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="<?php echo getenv('APP_URL') . '/assets/style.css'; ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
@@ -19,7 +23,8 @@ require_once __DIR__ . '/app/middleware/guest_middleware.php';
     <div class="body-wrapper">
         <div class="wrapper" style="display: none;">
             <h1>Register</h1>
-            <form id="userForm" method="POST" action="/auth.php?action=register">
+            <form id="userForm" method="POST" action="<?php echo getenv('APP_URL') . '/auth.php?action=register'; ?>">
+                <input type="hidden" name="csrf_token" value="<?php echo $crsfToken; ?>">
                 <label for="username">Nama Pengguna:</label>
                 <div class="input-wrapper username-wrapper">
                     <input type="text" id="username" name="username" required><br>
@@ -71,7 +76,8 @@ require_once __DIR__ . '/app/middleware/guest_middleware.php';
 
         <div class="wrapper">
             <h1>Login</h1>
-            <form id="loginForm" method="POST" action="/auth.php?action=login">
+            <form id="loginForm" method="POST" action="<?php echo getenv('APP_URL') . '/auth.php?action=login'; ?>">
+                <input type="hidden" name="csrf_token" value="<?php echo $crsfToken; ?>">
                 <label for="login-username">Nama Pengguna:</label>
                 <div class="input-wrapper">
                     <input type="text" id="login-username" name="username" required><br>
