@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/app/controller/auth/auth_controller.php';
-require_once __DIR__ . '/app/config/env_loader.php';
-session_start();
+
 
 $authController = new AuthController();
 

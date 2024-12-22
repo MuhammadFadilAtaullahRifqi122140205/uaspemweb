@@ -1,4 +1,4 @@
-# Deny all access to the 'app' directory
+# Deny all access to the 'middleware' directory
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
