@@ -20,7 +20,7 @@ class Connection {
 
         try {
             // Ensure environment variables are set
-            if (!$this->host || !$this->port || !$this->dbname || !$this->username || !$this->password) {
+            if (!$this->host || !$this->port || !$this->dbname || !$this->username) {
                 throw new Exception("Missing required database environment variables.");
             }
 

@@ -5,7 +5,7 @@ loadEnv(__DIR__ . '/../../.env');
 
 $auth = new AuthController();
 
-$auth->initRedisSession();
+$auth->initSession();
 
 function adminMiddleware() {
     if ($_SESSION['user']['role_id'] !== 1) {

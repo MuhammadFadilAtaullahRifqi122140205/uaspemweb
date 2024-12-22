@@ -4,7 +4,6 @@ require_once __DIR__ . '/../base_controller.php';
 class AuthController extends BaseController {
     public function __construct() {
         parent::__construct();
-        $this->initRedisSession();
     }
 
 

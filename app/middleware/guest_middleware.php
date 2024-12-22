@@ -5,7 +5,7 @@ loadEnv(__DIR__ . '/../../.env');
 
 $auth = new AuthController();
 
-$auth->initRedisSession();
+$auth->initSession();
 
 if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true && isset($_SESSION['user'])) {
     header("Location: " . getenv('APP_URL') . "/user/dashboard");
