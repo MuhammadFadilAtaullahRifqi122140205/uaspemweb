@@ -6,13 +6,13 @@ CREATE TABLE IF NOT EXISTS roles (
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     role_id INT DEFAULT 2,
-    username VARCHAR(255) UNIQUE,
-    password VARCHAR(255),
+    username VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
     gender ENUM('Male', 'Female'),
     image VARCHAR(255) DEFAULT NULL,
-    city VARCHAR(255),
-    ip_address VARCHAR(50) UNIQUE,
-    browser TEXT,
+    city VARCHAR(255) NOT NULL,
+    ip_address VARCHAR(50) UNIQUE NOT NULL,
+    browser TEXT NOT NULL,
 
     FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
 );
@@ -22,11 +22,11 @@ INSERT INTO roles (name) VALUES ('Admin'), ('User');
 
 CREATE TABLE IF NOT EXISTS products (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    name VARCHAR(255),
-    price DECIMAL(10, 2),
+    user_id INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
     image VARCHAR(255) DEFAULT NULL,
-    description TEXT,
+    description TEXT NOT NULL,
 
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

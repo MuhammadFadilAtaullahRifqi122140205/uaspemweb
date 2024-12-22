@@ -68,8 +68,10 @@ class AuthController extends BaseController {
             }
         } elseif ($action === 'login') {
             $result = $this->login($username, $password);
-            if ($result === true) {
-                echo "Login succeeded.";
+            if ($result === "admin") {
+                echo "Admin";
+            }else if($result === "user"){
+                echo "User";
             } else {
                 echo $result;
             }
@@ -92,7 +94,7 @@ class AuthController extends BaseController {
             if ($user && password_verify($password, $user['password'])) {
                 $_SESSION['logged_in'] = true;
                 $_SESSION['user'] = $user;
-                return true;
+                return $user['role_id'] === 1 ? "admin" : "user";
             } else {
                 return "Login failed. Invalid credentials.";
             }
