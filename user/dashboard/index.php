@@ -12,22 +12,31 @@ $products = $productController->getAllProducts();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="../../assets/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 </head>
 <body>
     <div class="layout">
         <?php include __DIR__ . '/../components/navbar.php'; ?>
-        <main>
+        <main id="main-content">
             <div>
                 <h2>All Products</h2>
                 <div class="cards">
                     <?php if (!empty($products)): ?>
                         <?php foreach ($products as $product): ?>
                             <div class="card">
+                                <div class="image-wrapper">
+                                    <?php if (!empty($product['image'])): ?>
+                                        <img src="<?php echo htmlspecialchars($product['image']); ?>" alt="Product Image">
+                                    <?php endif; ?>
+                                </div>
                                 <h3><?php echo htmlspecialchars($product['name']); ?></h3>
-                                <p>Seller: <?php echo htmlspecialchars($product['user_id']); ?></p>
+                                <p>Seller: <?php echo htmlspecialchars($product['username']); ?></p>
                                 <p>Description: <?php echo htmlspecialchars($product['description']); ?></p>
-                                <button class="add-to-cart" data-id="<?php echo $product['id']; ?>" data-name="<?php echo htmlspecialchars($product['name']); ?>" data-price="<?php echo $product['price']; ?>">Add to Cart</button>
+                                <p>Price: Rp<?php echo number_format($product['price'], 0, ',', '.'); ?></p>
+                                <button class="add-to-cart" data-image="<?php echo $product['image']; ?>" data-id="<?php echo $product['id']; ?>" data-name="<?php echo htmlspecialchars($product['name']); ?>" data-price="<?php echo $product['price']; ?>">Add to Cart</button>
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
@@ -38,43 +47,6 @@ $products = $productController->getAllProducts();
         </main>
     </div>
     <?php include __DIR__ . '/../components/footer.php'; ?>
-    <script>
-        $(document).ready(function() {
-            $('.add-to-cart').on('click', function() {
-                const productId = $(this).data('id');
-                const productName = $(this).data('name');
-                const productPrice = $(this).data('price');
-                const product = { id: productId, name: productName, price: productPrice };
-
-                let cart = [];
-                const cartCookie = getCookie('cart');
-                if (cartCookie) {
-                    cart = JSON.parse(cartCookie);
-                }
-
-                cart.push(product);
-                setCookie('cart', JSON.stringify(cart), 7);
-                alert('Product added to cart');
-            });
-
-            function setCookie(name, value, days) {
-                const d = new Date();
-                d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
-                const expires = "expires=" + d.toUTCString();
-                document.cookie = name + "=" + value + ";" + expires + ";path=/";
-            }
-
-            function getCookie(name) {
-                const nameEQ = name + "=";
-                const ca = document.cookie.split(';');
-                for (let i = 0; i < ca.length; i++) {
-                    let c = ca[i];
-                    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-                    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-                }
-                return null;
-            }
-        });
-    </script>
+    <script src="../../assets/script.js"></script>
 </body>
 </html>
