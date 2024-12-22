@@ -1,7 +1,11 @@
 <?php
 require_once __DIR__ . '/../config/env_loader.php';
+require_once __DIR__ . '/../controller/auth/auth_controller.php';
 loadEnv(__DIR__ . '/../../.env');
-session_start();
+
+$auth = new AuthController();
+
+$auth->initRedisSession();
 
 function adminMiddleware() {
     if ($_SESSION['user']['role_id'] !== 1) {
