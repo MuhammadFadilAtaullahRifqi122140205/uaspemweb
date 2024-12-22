@@ -54,13 +54,17 @@ $crsfToken = $authController->generateCsrfToken();
                     </div>
                 </div>
                 <br>
-
-                <label for="city">Kota:</label>
-                <select id="city" name="city" required>
-                    <option value="Bandar Lampung">Bandar Lampung</option>
-                    <option value="Jakarta">Jakarta</option>
-                    <option value="Surabaya">Surabaya</option>
-                </select><br>
+                <div class="input-wrapper">
+                    <label for="city">Kota:</label>
+                    <select id="city" name="city" required>
+                        <option value="Bandar Lampung">Bandar Lampung</option>
+                        <option value="Jakarta">Jakarta</option>
+                        <option value="Surabaya">Surabaya</option>
+                        <option value="Others">Others</option>
+                    </select>
+                    <input type="text" id="other_city" name="other_city" placeholder="Enter your city" style="display: none; margin-top: 10px;">
+                </div>
+                <br>
 
                 <label class="agree">
                     <input type="checkbox" id="agree" name="agree" required> Setuju dengan syarat dan ketentuan
@@ -130,9 +134,24 @@ $crsfToken = $authController->generateCsrfToken();
                 $(".wrapper").toggle();
             });
 
+            $('#city').on('change', function() {
+                if ($(this).val() === 'Others') {
+                    $('#other_city').show();
+                } else {
+                    $('#other_city').hide();
+                }
+            });
+
             $.validator.addMethod("passwordPattern", function(value, element) {
                 return this.optional(element) || /^(?=.*[A-Z])(?=.*[!@#$%^&*])/.test(value);
             }, "Password must contain at least one uppercase letter and one special character");
+
+            $.validator.addMethod("otherCityRequired", function(value, element) {
+                if ($("#city").val() === "Others") {
+                    return value.trim() !== "";
+                }
+                return true;
+            }, "Please enter your city");
 
             $("#userForm").validate({
                 rules: {
@@ -147,6 +166,9 @@ $crsfToken = $authController->generateCsrfToken();
                     },
                     gender: "required",
                     city: "required",
+                    other_city: {
+                        otherCityRequired: true
+                    },
                     agree: "required"
                 },
                 messages: {
@@ -206,9 +228,11 @@ $crsfToken = $authController->generateCsrfToken();
                         type: 'POST',
                         data: $(form).serialize(),
                         success: function(response) {
-                            if (response.trim() === "Login succeeded.") {
+                            if (response.trim() === "Admin") {
+                                window.location.href = APP_URL + "/admin/dashboard";
+                            }else if(response.trim() === "User"){
                                 window.location.href = APP_URL + "/user/dashboard";
-                            } else {
+                            }else {
                                 $("#login-error-message").text(response);
                             }
                         }
