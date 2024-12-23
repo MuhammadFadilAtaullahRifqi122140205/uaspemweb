@@ -11,24 +11,11 @@ loadEnv(__DIR__ . '/.env');
 try {
     // Mendapatkan nama database dari variabel lingkungan
     $dbName = getenv('DB_NAME');
-    $dbHost = getenv('DB_HOST');
+    $dbHost = getenv('DB_HOST'); // Nama layanan MySQL dalam Docker Compose
     $dbUser = getenv('DB_USER');
-    $dbPass = getenv('DB_PASS');
-
-    // Membuat koneksi ke MySQL tanpa menentukan database
-    $pdo = new PDO("mysql:host=$dbHost", $dbUser, $dbPass);
+    $dbPass = getenv('DB_PASSWORD');
+    $pdo = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    // Memeriksa apakah database ada
-    $stmt = $pdo->query("SHOW DATABASES LIKE '$dbName'");
-    if ($stmt->rowCount() == 0) {
-        // Membuat database jika tidak ada
-        $pdo->exec("CREATE DATABASE `$dbName`");
-        echo "Database '$dbName' created successfully.\n";
-    }
-
-    // Menghubungkan ke database yang baru dibuat atau sudah ada
-    $pdo->exec("USE `$dbName`");
 
     echo "Connected successfully to the database '$dbName'.\n";
 
@@ -72,7 +59,7 @@ try {
     $hashedPassword = password_hash($adminPassword, PASSWORD_BCRYPT);
 
     $stmt = $pdo->prepare("INSERT INTO users (role_id, username, password, gender, city, ip_address, browser) VALUES
-        (1, :username, :password, 'Male', 'Default City', '127.0.0.1', 'Default Browser')");
+        (1, :username, :password, 'Male', 'Default City', '127.0.0.1', 'Default')");
     $stmt->execute([
         ':username' => $adminUsername,
         ':password' => $hashedPassword,
@@ -82,6 +69,4 @@ try {
 
 } catch (PDOException $e) {
     die("Database error: " . $e->getMessage());
-} catch (Exception $e) {
-    die($e->getMessage());
 }

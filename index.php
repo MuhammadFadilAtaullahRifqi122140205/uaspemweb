@@ -238,12 +238,11 @@ $crsfToken = $authController->generateCsrfToken();
                     type: 'POST',
                     data: $(this).serialize(),
                     success: function(response) {
-                        if (response.trim() === "Admin") {
-                            window.location.href = APP_URL + "/admin/dashboard";
-                        } else if (response.trim() === "User") {
-                            window.location.href = APP_URL + "/user/dashboard";
+                        if(response.trim() === "User") {
+                            window.location.href = APP_URL + '/user/dashboard';
+                        }else if(response.trim() === "Admin") {
+                            window.location.href = APP_URL + '/admin/dashboard';
                         } else {
-                            // Tampilkan pesan error jika login gagal
                             $(".login-error-message").text(response);
                         }
                     }

@@ -12,5 +12,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ketika request method adalah GET dan action adalah logout maka akan memanggil method logout dari AuthController
     $authController->logout();
     header("Location: " . getenv('APP_URL'));
-    exit();
 }

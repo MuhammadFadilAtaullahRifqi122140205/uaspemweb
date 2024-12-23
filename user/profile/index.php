@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $gender = $_POST['gender'];
     $city = $_POST['city'];
 
+    $imagePath = '';
     // Memanggil fungsi untuk memperbarui profil pengguna
     $result = $userController->updateUserProfile($_SESSION['user']['id'], $username, $gender, $city, $imagePath);
     if ($result["status"] === 200) {

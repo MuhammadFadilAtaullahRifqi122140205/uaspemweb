@@ -9,7 +9,6 @@ $productController = new ProductController();
 // Mendapatkan semua produk
 $products = $productController->getAllProducts();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
