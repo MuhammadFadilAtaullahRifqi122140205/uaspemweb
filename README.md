@@ -539,3 +539,9 @@ ports:
 ```sh
 docker-compose up --build
 ```
+
+- Akun Admin Default
+
+username: admin
+
+password: Password@123
