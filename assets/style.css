@@ -512,6 +512,105 @@ footer {
   font-weight: bold;
 }
 
+/* Dark Mode Styles */
+.dark-mode {
+  background-color: #2e2e2e;
+  color: #e0e0e0;
+}
+
+.dark-mode #main-content {
+  background-color: #2e2e2e;
+}
+
+.dark-mode .navbar,
+.dark-mode .sidebar {
+  background-color: #3e3e3e;
+}
+
+.dark-mode a {
+  color: #a3c4bc;
+}
+
+.dark-mode .profile h2 {
+  color: #a3c4bc;
+}
+
+.dark-mode .profile img {
+  border: 2px solid #a3c4bc;
+}
+
+.dark-mode .btn-link {
+  color: #ffb6b9;
+  background-color: #3e3e3e;
+}
+
+.dark-mode .btn-link:hover {
+  color: #ff8c94;
+  background-color: #3e3e3e;
+}
+
+.dark-mode button {
+  background-color: #a3c4bc;
+  color: #2e2e2e;
+}
+
+.dark-mode button:hover {
+  background-color: #bfd7b5;
+}
+
+.dark-mode .card {
+  background-color: #3e3e3e;
+  border: 1px solid #a3c4bc;
+}
+
+.dark-mode .card h3 {
+  color: #a3c4bc;
+}
+
+.dark-mode .card p {
+  color: #e0e0e0;
+}
+
+.dark-mode .footer-content {
+  background-color: #3e3e3e;
+}
+
+.dark-mode .footer-section h2 {
+  color: #a3c4bc;
+}
+
+.dark-mode .footer-section p,
+.dark-mode .footer-section ul,
+.dark-mode .footer-section li {
+  color: #e0e0e0;
+}
+
+.dark-mode .footer-section ul li a {
+  color: #a3c4bc;
+}
+
+.dark-mode .footer-section ul li a:hover {
+  color: #bfd7b5;
+}
+
+.dark-mode .footer-bottom {
+  border-top: 1px solid #a3c4bc;
+  color: #e0e0e0;
+}
+
+.dark-mode .modal-content {
+  background-color: #3e3e3e;
+  color: #e0e0e0;
+}
+
+.dark-mode .modal-close {
+  color: #ffb6b9;
+}
+
+.dark-mode .modal-close:hover {
+  color: #ff8c94;
+}
+
 /* Responsive Styles */
 @media (max-width: 768px) {
   .sidebar {

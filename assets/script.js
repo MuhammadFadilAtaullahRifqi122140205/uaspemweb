@@ -1,4 +1,9 @@
 $(document).ready(function () {
+  // Cek preferensi dark mode dari localStorage
+  if (localStorage.getItem('darkMode') === 'enabled') {
+    $('body').addClass('dark-mode');
+  }
+
   $('#userForm').on('submit', function (e) {
     if (!$('#agree').is(':checked')) {
       alert('Anda harus setuju dengan syarat dan ketentuan.');
