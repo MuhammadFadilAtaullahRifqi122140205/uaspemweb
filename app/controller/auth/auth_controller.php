@@ -14,17 +14,20 @@ class AuthController extends BaseController {
             return;
         }
 
-        // Escape input data
-        $username = htmlspecialchars($data['username'], ENT_QUOTES, 'UTF-8');
-        $password = htmlspecialchars($data['password'], ENT_QUOTES, 'UTF-8');
-        $gender = htmlspecialchars($data['gender'], ENT_QUOTES, 'UTF-8');
-        $city = htmlspecialchars($data['city'], ENT_QUOTES, 'UTF-8');
-        $agree = isset($data['agree']);
-        // Mendapatkan Public IPV4 address dari user
-        $ip = file_get_contents('https://api.ipify.org');
-        $browser = htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES, 'UTF-8');
 
-        if ($action === 'register' && $agree) {
+        if ($action === 'register') {
+            $agree = isset($data['agree']);
+            if (!$agree) {
+                echo "You must agree to the terms and conditions.";
+                return;
+            }
+            $username = htmlspecialchars($data['username'], ENT_QUOTES, 'UTF-8');
+            $password = htmlspecialchars($data['password'], ENT_QUOTES, 'UTF-8');
+            $gender = htmlspecialchars($data['gender'], ENT_QUOTES, 'UTF-8');
+            $city = htmlspecialchars($data['city'], ENT_QUOTES, 'UTF-8');
+            // Mendapatkan Public IPV4 address dari user
+            $ip = file_get_contents('https://api.ipify.org');
+            $browser = htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES, 'UTF-8');
             // Jika query string action = register (?action=register) maka akan memanggil method register
             $result = $this->register($username, $password, $gender, $city, $ip, $browser);
             if ($result === true) {
@@ -33,14 +36,16 @@ class AuthController extends BaseController {
                 echo $result;
             }
         } elseif ($action === 'login') {
+            $username = htmlspecialchars($data['username'], ENT_QUOTES, 'UTF-8');
+            $password = htmlspecialchars($data['password'], ENT_QUOTES, 'UTF-8');
             // Jika query string action = login (?action=login) maka akan memanggil method login
             $result = $this->login($username, $password);
-            if ($result === "admin") {
+            if ($result["status"] === 200 && $result["role_id"] === 1) {
                 echo "Admin";
-            }else if($result === "user"){
+            }else if($result["status"] === 200 && $result["role_id"] === 2){
                 echo "User";
             } else {
-                echo $result;
+                echo $result["message"];
             }
         } elseif ($action === 'logout') {
             // Jika query string action = logout (?action=logout) maka akan memanggil method logout
@@ -68,10 +73,10 @@ class AuthController extends BaseController {
                 $_SESSION['logged_in'] = true;
                 $_SESSION['user'] = $user;
                 // Jika role_id dari user adalah 1 maka akan mengembalikan "admin" jika tidak maka akan mengembalikan "user"
-                return $user['role_id'] === 1 ? "admin" : "user";
+                return ["status" => 200, "role_id" => $user['role_id']];
             } else {
                 // Jika user tidak ditemukan atau password tidak sesuai maka akan mengembalikan pesan error "Login failed. Invalid credentials."
-                return "Login failed. Invalid credentials.";
+                return ["status" => 401, "message" => "Login failed. Invalid credentials."];
             }
         } catch (PDOException $e) {
             // Jika terjadi error saat eksekusi query maka akan mengembalikan pesan error
@@ -85,6 +90,7 @@ class AuthController extends BaseController {
         session_destroy();
         // Redirect ke halaman utama
         header("Location: " . getenv('APP_URL'));
+        die();
     }
 
     public function register($username, $password, $gender, $city, $ip, $browser) {
@@ -116,11 +122,10 @@ class AuthController extends BaseController {
             if ($e->getCode() == 23000) {
                 // Code error 23000 adalah error ketika terjadi duplicate entry
                 $errorMessage = $e->getMessage();
-
-                if (strpos($errorMessage, 'for key \'username\'') !== false) {
+                if (strpos($errorMessage, 'username') !== false) {
                     // Jika error message mengandung kata 'username' maka akan mengembalikan pesan error "Registration failed: Username already exists."
                     return "Registration failed: Username already exists.";
-                } elseif (strpos($errorMessage, 'for key \'ip_address\'') !== false) {
+                } elseif (strpos($errorMessage, 'ip_address') !== false) {
                     // Jika error message mengandung kata 'ip_address' maka akan mengembalikan pesan error "Registration failed: User with this IP address already exists."
                     return "Registration failed: User with this IP address already exists.";
                 } else {

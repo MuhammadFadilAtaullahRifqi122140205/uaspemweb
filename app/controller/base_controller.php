@@ -1,4 +1,6 @@
 <?php
+// Mulai Session
+session_start();
 require_once __DIR__ . '/../database/db.php';
 
 
@@ -6,14 +8,8 @@ class BaseController extends Connection {
     public function __construct() {
         // Memanggil constructor dari parent class
         parent::__construct();
-        // Memanggil method initSession
-        $this->initSession();
     }
 
-    public function initSession() {
-        // Memulai session jika belum dimulai
-        session_start();
-    }
 
     public function generateCsrfToken() {
         if (empty($_SESSION['csrf_token'])) {

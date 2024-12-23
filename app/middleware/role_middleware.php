@@ -11,14 +11,13 @@ loadEnv(__DIR__ . '/../../.env');
 $auth = new AuthController();
 
 // Memulai session
-$auth->initSession();
+// $auth->initSession();
 
 // Middleware untuk memeriksa apakah pengguna adalah admin
 function adminMiddleware() {
     if ($_SESSION['user']['role_id'] !== 1) {
         // Jika pengguna bukan admin, arahkan ke halaman dashboard pengguna
         header("Location: " . getenv('APP_URL') . "/user/dashboard");
-        exit();
     }
 }
 
@@ -27,7 +26,6 @@ function userMiddleware() {
     if ($_SESSION['user']['role_id'] !== 2) {
         // Jika pengguna bukan user biasa, arahkan ke halaman dashboard admin
         header("Location: " . getenv('APP_URL') . "/admin/dashboard");
-        exit();
     }
 }
 ?>

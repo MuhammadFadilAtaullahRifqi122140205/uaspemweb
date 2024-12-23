@@ -11,12 +11,11 @@ loadEnv(__DIR__ . '/../../.env');
 $auth = new AuthController();
 
 // Memulai session
-$auth->initSession();
+// $auth->initSession();
 
 // Memeriksa apakah pengguna sudah login
 if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true && isset($_SESSION['user'])) {
     // Jika pengguna sudah login, arahkan ke halaman dashboard pengguna
     header("Location: " . getenv('APP_URL') . "/user/dashboard");
-    exit();
 }
 ?>
