@@ -6,6 +6,31 @@
 
 ### Kelas : RB
 
+## Struktur Folder
+
+```sh
+├── admin
+│   ├── components
+│   ├── dashboard
+│   └── product
+├── app
+│   ├── config
+│   ├── controller
+│   │   ├── auth
+│   │   ├── product
+│   │   └── user
+│   ├── database
+│   └── middleware
+├── assets
+├── nginx
+├── storage
+└── user
+    ├── components
+    ├── dashboard
+    ├── product
+    └── profile
+```
+
 ### [Cara Menjalankan Web Server](#getting-started)
 
 ## Bagian 1 : Client-side Programming (Bobot: 30%)
