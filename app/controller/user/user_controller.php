@@ -93,7 +93,7 @@ class UserController extends BaseController {
     }
 
     // Fungsi untuk memperbarui profil pengguna
-    public function updateUserProfile($id, $username, $gender, $city, $imagePath) {
+    public function updateUserProfile($id, $username, $gender, $city) {
         try {
             $escapedUsername = htmlspecialchars($username, ENT_QUOTES, 'UTF-8');
             $escapedGender = htmlspecialchars($gender, ENT_QUOTES, 'UTF-8');
@@ -110,10 +110,14 @@ class UserController extends BaseController {
                 }
             }
 
-            $imagePath = $user['image'];
-
             // Proses upload gambar
             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                if (!empty($user["image"])) {
+                    $existingImagePath = __DIR__ . '/../../../' . $user['image'];
+                    if (file_exists($existingImagePath)) {
+                        unlink($existingImagePath);
+                    }
+                }
                 $fileTmpPath = $_FILES['image']['tmp_name'];
                 $fileName = $_FILES['image']['name'];
                 $fileSize = $_FILES['image']['size'];
