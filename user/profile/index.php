@@ -1,24 +1,34 @@
 <?php
+// Memuat middleware untuk otentikasi
 require_once __DIR__ . '/../../app/middleware/auth_middleware.php';
+// Memuat controller untuk pengguna
 require_once __DIR__ . '/../../app/controller/user/user_controller.php';
 
+// Membuat instance dari UserController
 $userController = new UserController();
+// Mendapatkan data pengguna dari sesi
 $user = $_SESSION['user'];
 
+// Inisialisasi pesan toast
 $toastMessage = '';
 $toastType = '';
 
+// Memeriksa apakah permintaan adalah POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Mendapatkan data dari form
     $username = $_POST['username'];
     $gender = $_POST['gender'];
     $city = $_POST['city'];
 
+    // Memanggil fungsi untuk memperbarui profil pengguna
     $result = $userController->updateUserProfile($_SESSION['user']['id'], $username, $gender, $city, $imagePath);
     if ($result["status"] === 200) {
+        // Jika berhasil, set pesan toast dan arahkan ke halaman profil
         $toastMessage = "Profile updated successfully.";
         $toastType = 'success';
         header("Location: /user/profile");
     } else {
+        // Jika gagal, set pesan toast dengan pesan kesalahan
         $toastMessage = $result["message"];
         $toastType = 'error';
     }
@@ -71,6 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>
         $(document).ready(function() {
+            // Menampilkan pesan toast jika ada
             var toastMessage = <?php echo json_encode($toastMessage); ?>;
             var toastType = <?php echo json_encode($toastType); ?>;
             if (toastMessage) {

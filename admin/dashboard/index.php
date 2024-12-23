@@ -1,10 +1,15 @@
 <?php
+// Memuat file user_controller.php yang berisi kelas UserController
 require_once __DIR__ . '/../../app/controller/user/user_controller.php';
 
+// Membuat instance dari UserController
 $userController = new UserController();
+// Menghasilkan token CSRF
 $csrfToken = $userController->generateCsrfToken();
+// Menangani permintaan
 $userController->handleRequest();
 
+// Mendapatkan semua pengguna
 $users = $userController->getAllUsers();
 ?>
 <!DOCTYPE html>

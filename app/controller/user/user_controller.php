@@ -5,9 +5,10 @@ class UserController extends BaseController {
         parent::__construct();
     }
 
+    // Fungsi untuk membuat pengguna baru dari admin
     public function createUserFromAdmin($username, $gender, $city, $ip, $browser) {
         try {
-            $password = password_hash('password', PASSWORD_DEFAULT);
+            $password = password_hash('password', PASSWORD_DEFAULT); // Hash password default
             $stmt = $this->db->prepare("INSERT INTO users (username, gender, city, ip_address, browser, password) VALUES (:username, :gender, :city, :ip, :browser, :password)");
             $stmt->execute([
                 ':username' => $username,
@@ -23,6 +24,7 @@ class UserController extends BaseController {
         }
     }
 
+    // Fungsi untuk membuat pengguna baru
     public function createUser($username, $gender, $city, $ip, $browser, $password) {
         try {
             $stmt = $this->db->prepare("INSERT INTO users (username, gender, city, ip_address, browser) VALUES (:username, :gender, :city, :ip, :browser)");
@@ -39,6 +41,7 @@ class UserController extends BaseController {
         }
     }
 
+    // Fungsi untuk mendapatkan pengguna berdasarkan ID
     public function getUserById($id) {
         try {
             $stmt = $this->db->prepare("SELECT * FROM users WHERE id = :id");
@@ -49,9 +52,10 @@ class UserController extends BaseController {
         }
     }
 
+    // Fungsi untuk mendapatkan semua pengguna kecuali pengguna saat ini
     public function getAllUsers() {
-   	    try {
-       	    $currentUserId = $_SESSION['user']['id'];
+        try {
+            $currentUserId = $_SESSION['user']['id'];
             $stmt = $this->db->prepare("SELECT * FROM users WHERE id != :currentUserId");
             $stmt->bindParam(':currentUserId', $currentUserId, PDO::PARAM_INT);
             $stmt->execute();
@@ -61,12 +65,14 @@ class UserController extends BaseController {
         }
     }
 
+    // Fungsi untuk memperbarui pengguna
     public function updateUser($id, $username, $gender, $city, $ip, $browser) {
         try {
             $user = $this->getUserById($id);
 
+            // Cek apakah pengguna yang sedang login adalah pengguna yang akan diperbarui atau admin
             if ($_SESSION['user']['id'] !== $user['id']) {
-                if($_SESSION['user']['role_id'] !== 1) {
+                if ($_SESSION['user']['role_id'] !== 1) {
                     return ['status' => 403, 'message' => 'Forbidden'];
                 }
             }
@@ -86,6 +92,7 @@ class UserController extends BaseController {
         }
     }
 
+    // Fungsi untuk memperbarui profil pengguna
     public function updateUserProfile($id, $username, $gender, $city, $imagePath) {
         try {
             $escapedUsername = htmlspecialchars($username, ENT_QUOTES, 'UTF-8');
@@ -96,14 +103,16 @@ class UserController extends BaseController {
 
             $user = $this->getUserById($id);
 
+            // Cek apakah pengguna yang sedang login adalah pengguna yang akan diperbarui atau admin
             if ($_SESSION['user']['id'] !== $user['id']) {
-                if($_SESSION['user']['role_id'] !== 1) {
+                if ($_SESSION['user']['role_id'] !== 1) {
                     return ['status' => 403, 'message' => 'Forbidden'];
                 }
             }
 
             $imagePath = $user['image'];
 
+            // Proses upload gambar
             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                 $fileTmpPath = $_FILES['image']['tmp_name'];
                 $fileName = $_FILES['image']['name'];
@@ -134,6 +143,7 @@ class UserController extends BaseController {
                 ':image' => $imagePath
             ]);
 
+            // Perbarui sesi pengguna jika pengguna yang sedang login adalah pengguna yang diperbarui
             if ($_SESSION['user']['id'] === $id) {
                 $_SESSION['user']['username'] = $escapedUsername;
                 $_SESSION['user']['gender'] = $escapedGender;
@@ -146,11 +156,13 @@ class UserController extends BaseController {
         }
     }
 
+    // Fungsi untuk menghapus pengguna
     public function deleteUser($id) {
         try {
             $user = $this->getUserById($id);
+            // Cek apakah pengguna yang sedang login adalah pengguna yang akan dihapus atau admin
             if ($_SESSION['user']['id'] !== $user['id']) {
-                if($_SESSION['user']['role_id'] !== 1) {
+                if ($_SESSION['user']['role_id'] !== 1) {
                     return ['status' => 403, 'message' => 'Forbidden'];
                 }
             }
@@ -161,6 +173,8 @@ class UserController extends BaseController {
             return ['status' => 500, 'message' => "Error: " . $e->getMessage()];
         }
     }
+
+    // Fungsi untuk menangani permintaan
     public function handleRequest() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $response = ['status' => 400, 'message' => 'Invalid request'];

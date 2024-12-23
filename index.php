@@ -14,7 +14,6 @@ $crsfToken = $authController->generateCsrfToken();
     <link rel="stylesheet" href="<?php echo getenv('APP_URL') . '/assets/style.css'; ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
     <script>
         const APP_URL = "<?php echo getenv('APP_URL'); ?>";
     </script>
@@ -70,7 +69,7 @@ $crsfToken = $authController->generateCsrfToken();
                     <input type="checkbox" id="agree" name="agree" required> Setuju dengan syarat dan ketentuan
                 </label><br>
 
-                <div id="error-message" style="color: red;"></div>
+                <div id="error-message"></div>
                 <div class="change-form">
                     <p>Have an account? <span class="change">Login</span></p>
                 </div>
@@ -93,7 +92,7 @@ $crsfToken = $authController->generateCsrfToken();
                 </div>
                 <br>
 
-                <div id="login-error-message" style="color: red;"></div>
+                <div class="login-error-message"></div>
                 <div class="change-form">
                     <p>Don't have an account? <span class="change">Register</span></p>
                 </div>
@@ -104,6 +103,7 @@ $crsfToken = $authController->generateCsrfToken();
 
     <script>
         $(document).ready(function() {
+            // Toggle icon mata untuk input password
             $(".toggle-password").on("click", function () {
                 var passwordField = $(this).siblings("input");
                 var toggleIcon = $(".icon-password");
@@ -117,6 +117,7 @@ $crsfToken = $authController->generateCsrfToken();
                 }
             });
 
+            // Toggle icon mata untuk input confirm password
             $(".toggle-confirm-password").on("click", function () {
                 var passwordField = $(this).siblings("input");
                 var toggleIcon = $(".icon-confirm-password");
@@ -130,10 +131,12 @@ $crsfToken = $authController->generateCsrfToken();
                 }
             });
 
+            // Toggle form register dan login ketika tombol "Register" atau "Login" diklik style="display: none;
             $(".change").on("click", function() {
                 $(".wrapper").toggle();
             });
 
+            // Menampilkan input "other_city" ketika option "Others" dipilih
             $('#city').on('change', function() {
                 if ($(this).val() === 'Others') {
                     $('#other_city').show();
@@ -142,66 +145,83 @@ $crsfToken = $authController->generateCsrfToken();
                 }
             });
 
-            $.validator.addMethod("passwordPattern", function(value, element) {
-                return this.optional(element) || /^(?=.*[A-Z])(?=.*[!@#$%^&*])/.test(value);
-            }, "Password must contain at least one uppercase letter and one special character");
+            // Fungsi untuk validasi form
+            function validateField(element) {
+                var value = element.val().trim();
+                var errorMessage = "";
 
-            $.validator.addMethod("otherCityRequired", function(value, element) {
-                if ($("#city").val() === "Others") {
-                    return value.trim() !== "";
+                // Ketika input required dan value kosong maka menampilkan pesan error "Please fill out this field."
+                if (element.attr("required") && value === "") {
+                    errorMessage = "Please fill out this field.";
                 }
-                return true;
-            }, "Please enter your city");
 
-            $("#userForm").validate({
-                rules: {
-                    username: {
-                        required: true,
-                        minlength: 3
-                    },
-                    password: {
-                        required: true,
-                        minlength: 8,
-                        passwordPattern: true
-                    },
-                    gender: "required",
-                    city: "required",
-                    other_city: {
-                        otherCityRequired: true
-                    },
-                    agree: "required"
-                },
-                messages: {
-                    username: {
-                        required: "Please enter your username",
-                        minlength: "Username must be at least 3 characters"
-                    },
-                    password: {
-                        required: "Please enter your password",
-                        minlength: "Password must be at least 8 characters",
-                        passwordPattern: "Password must contain at least one uppercase letter and one special character"
-                    },
-                    gender: "Please select your gender",
-                    city: "Please select your city",
-                    agree: "You must agree to the terms and conditions"
-                },
-                errorPlacement: function(error, element) {
-                    if (element.attr("name") == "gender") {
-                        error.insertAfter(".radio");
-                    } else if (element.attr("name") == "agree") {
-                        error.insertAfter(".agree");
-                    } else {
-                        error.insertAfter(element);
+                // Ketika username kurang dari 3 karakter maka menampilkan pesan error "Username must be at least 3 characters."
+                if (element.attr("name") === "username" && value.length < 3) {
+                    errorMessage = "Username must be at least 3 characters.";
+                }
+
+                // Ketika password kurang dari 8 karakter maka menampilkan pesan error "Password must be at least 8 characters."
+                if (element.attr("name") === "password" && value.length < 8) {
+                    errorMessage = "Password must be at least 8 characters.";
+                }
+
+                // Ketika password tidak mengandung huruf besar dan special character maka menampilkan pesan error
+                // "Password must contain at least one uppercase letter and one special character."
+                if (element.attr("name") === "password" && !/^(?=.*[A-Z])(?=.*[!@#$%^&*])/.test(value)) {
+                    errorMessage = "Password must contain at least one uppercase letter and one special character.";
+                }
+
+                // Ketika confirm password tidak sama dengan password maka menampilkan pesan error "Passwords do not match."
+                if (element.attr("name") === "confirmPassword" && value !== $("#password").val()) {
+                    errorMessage = "Passwords do not match.";
+                }
+
+                // Ketika city "Others" dipilih dan input "other_city" kosong maka menampilkan pesan error "Please enter your city."
+                if (element.attr("name") === "other_city" && $("#city").val() === "Others" && value === "") {
+                    errorMessage = "Please enter your city.";
+                }
+
+                // Ketika checkbox "agree" tidak dicheck maka menampilkan pesan error "Please check this to proceed."
+                if (element.attr("name") === "agree" && !element.is(":checked")) {
+                    errorMessage = "Please check this to proceed.";
+                }
+
+                // Tampilkan error message di class "error-message" jika errorMessage tidak kosong
+                if (errorMessage) {
+                    element.next(".error-message").remove();
+                    element.after('<span class="error-message">' + errorMessage + '</span>');
+                    return false;
+                } else {
+                    // Hapus error message jika errorMessage kosong
+                    element.next(".error-message").remove();
+                    return true;
+                }
+            }
+
+            // Validasi form ketika input atau select diubah
+            $("#userForm input, #userForm select").on("input change", function() {
+                validateField($(this));
+            });
+
+            // Validasi register form ketika form di submit
+            $("#userForm").on("submit", function(e) {
+                e.preventDefault();
+                var isValid = true;
+                $(this).find("input, select").each(function() {
+                    if (!validateField($(this))) {
+                        isValid = false;
                     }
-                },
-                submitHandler: function(form) {
+                });
+
+                // Post request jika form valid dan tampilkan pesan error jika gagal
+                if (isValid) {
                     $.ajax({
-                        url: $(form).attr('action'),
+                        url: $(this).attr('action'),
                         type: 'POST',
-                        data: $(form).serialize(),
+                        data: $(this).serialize(),
                         success: function(response) {
                             if (response.trim() === "Registration succeeded.") {
-                               $(".wrapper").toggle();
+                                $(".wrapper").toggle();
                             } else {
                                 $("#error-message").text(response);
                             }
@@ -210,34 +230,24 @@ $crsfToken = $authController->generateCsrfToken();
                 }
             });
 
-            $("#loginForm").validate({
-                rules: {
-                    username: "required",
-                    password: "required"
-                },
-                messages: {
-                    username: "Please enter your username",
-                    password: "Please enter your password"
-                },
-                errorPlacement: function(error, element) {
-                    error.insertAfter(element);
-                },
-                submitHandler: function(form) {
-                    $.ajax({
-                        url: $(form).attr('action'),
-                        type: 'POST',
-                        data: $(form).serialize(),
-                        success: function(response) {
-                            if (response.trim() === "Admin") {
-                                window.location.href = APP_URL + "/admin/dashboard";
-                            }else if(response.trim() === "User"){
-                                window.location.href = APP_URL + "/user/dashboard";
-                            }else {
-                                $("#login-error-message").text(response);
-                            }
+            // Login form
+            $("#loginForm").on("submit", function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        if (response.trim() === "Admin") {
+                            window.location.href = APP_URL + "/admin/dashboard";
+                        } else if (response.trim() === "User") {
+                            window.location.href = APP_URL + "/user/dashboard";
+                        } else {
+                            // Tampilkan pesan error jika login gagal
+                            $(".login-error-message").text(response);
                         }
-                    });
-                }
+                    }
+                });
             });
         });
     </script>

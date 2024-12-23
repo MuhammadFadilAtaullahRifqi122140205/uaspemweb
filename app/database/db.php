@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/env_loader.php';
+// Load .env file
 loadEnv(__DIR__ . '/../../.env');
 
 class Connection {
@@ -11,7 +12,7 @@ class Connection {
     protected $password;
 
     public function __construct() {
-        // Load environment variables
+        // Set attribute dari environment variables
         $this->host = getenv('DB_HOST');
         $this->port = getenv('DB_PORT');
         $this->dbname = getenv('DB_NAME');
@@ -19,26 +20,26 @@ class Connection {
         $this->password = getenv('DB_PASSWORD');
 
         try {
-            // Ensure environment variables are set
+            // Pastikan environment variables sudah di-set
             if (!$this->host || !$this->port || !$this->dbname || !$this->username) {
                 throw new Exception("Missing required database environment variables.");
             }
 
-            // Create the DSN
+            // membuat Data Source Name (DSN) untuk PDO
             $dsn = "mysql:host={$this->host};port={$this->port};dbname={$this->dbname};charset=utf8mb4";
 
-            // Initialize PDO
+            // Membuat koneksi ke database
             $this->db = new PDO($dsn, $this->username, $this->password);
 
-            // Set PDO attributes
+            // Set error mode ke exception
             $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
+            // Jika terjadi error saat koneksi ke database maka akan menampilkan pesan error
             die("Database connection failed: " . $e->getMessage());
-        } catch (Exception $e) {
-            die("Error: " . $e->getMessage());
         }
     }
 
+    // Method untuk mendapatkan koneksi database
     public function getDb() {
         return $this->db;
     }

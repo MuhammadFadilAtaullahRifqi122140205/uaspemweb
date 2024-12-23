@@ -4,14 +4,33 @@ if (php_sapi_name() !== 'cli') {
     die("This script can only be run from the command line.");
 }
 
-require_once __DIR__ . '/app/database/db.php';
+require_once __DIR__ . '/app/config/env_loader.php';
 
+loadEnv(__DIR__ . '/.env');
 
 try {
-    $connection = new Connection();
-    $pdo = $connection->getDb();
+    // Mendapatkan nama database dari variabel lingkungan
+    $dbName = getenv('DB_NAME');
+    $dbHost = getenv('DB_HOST');
+    $dbUser = getenv('DB_USER');
+    $dbPass = getenv('DB_PASS');
 
-    echo "Connected successfully to the database.\n";
+    // Membuat koneksi ke MySQL tanpa menentukan database
+    $pdo = new PDO("mysql:host=$dbHost", $dbUser, $dbPass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // Memeriksa apakah database ada
+    $stmt = $pdo->query("SHOW DATABASES LIKE '$dbName'");
+    if ($stmt->rowCount() == 0) {
+        // Membuat database jika tidak ada
+        $pdo->exec("CREATE DATABASE `$dbName`");
+        echo "Database '$dbName' created successfully.\n";
+    }
+
+    // Menghubungkan ke database yang baru dibuat atau sudah ada
+    $pdo->exec("USE `$dbName`");
+
+    echo "Connected successfully to the database '$dbName'.\n";
 
     // Migration: Create tables
     $pdo->exec("CREATE TABLE IF NOT EXISTS roles (

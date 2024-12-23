@@ -1,10 +1,15 @@
 <?php
+// Memuat middleware untuk otentikasi
 require_once __DIR__ . '/../../app/middleware/auth_middleware.php';
+// Memuat file product_controller.php yang berisi kelas ProductController
 require_once __DIR__ . '/../../app/controller/product/product_controller.php';
 
+// Membuat instance dari ProductController
 $productController = new ProductController();
+// Mendapatkan semua produk
 $products = $productController->getAllProducts();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -1,21 +1,29 @@
 <?php
+// Memuat file product_controller.php yang berisi kelas ProductController
 require_once __DIR__ . '/../../app/controller/product/product_controller.php';
 
+// Membuat instance dari ProductController
 $productController = new ProductController();
+// Menghasilkan token CSRF
 $csrfToken = $productController->generateCsrfToken();
 
+// Memeriksa apakah permintaan adalah POST dan ada aksi yang ditentukan
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    // Menangani permintaan POST
     $response = $productController->handleRequest();
     echo json_encode($response);
     exit();
 }
 
+// Memeriksa apakah permintaan adalah GET dan ada ID yang ditentukan
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
+    // Mendapatkan produk berdasarkan ID
     $product = $productController->getProductById($_GET['id']);
     echo json_encode($product);
     exit();
 }
 
+// Mendapatkan semua produk
 $products = $productController->getAllProducts();
 ?>
 <!DOCTYPE html>
