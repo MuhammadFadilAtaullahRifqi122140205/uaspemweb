@@ -210,11 +210,19 @@ button:hover {
 }
 
 .btn-danger {
-  background-color: #ff9999;
+  background-color: #ff9999 !important;
 }
 
 .btn-danger:hover {
-  background-color: #ffcccc;
+  background-color: #ffcccc !important;
+}
+
+.dark-mode .btn-danger {
+  background-color: #ff9999 !important;
+}
+
+.dark-model .btn-danger:hover {
+  background-color: #ffcccc !important;
 }
 
 .sidebar a:hover {
@@ -551,7 +559,7 @@ footer {
 
 .dark-mode button {
   background-color: #a3c4bc;
-  color: #2e2e2e;
+  color: #f9f9f9;
 }
 
 .dark-mode button:hover {
@@ -609,6 +617,83 @@ footer {
 
 .dark-mode .modal-close:hover {
   color: #ff8c94;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.user-table th,
+.user-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.user-table th {
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+.user-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.user-table tr:hover {
+  background-color: #ddd;
+}
+
+.user-table td button {
+  margin-right: 5px;
+}
+
+.user-table td button:last-child {
+  margin-right: 0;
+}
+
+/* Dark Mode Styles for .user-table */
+.dark-mode .user-table th {
+  background-color: #3e3e3e;
+  color: #a3c4bc;
+}
+
+.dark-mode .user-table tr:nth-child(even) {
+  background-color: #2e2e2e;
+}
+
+.dark-mode .user-table tr:hover {
+  background-color: #3e3e3e;
+}
+
+.dark-mode .user-table td {
+  border: 1px solid #555;
+  color: #e0e0e0;
+}
+
+.dark-mode .user-table th,
+.dark-mode .user-table td {
+  border-color: #555;
+}
+
+.dark-mode .user-table td button {
+  background-color: #a3c4bc;
+  color: #f9f9f9;
+}
+
+.dark-mode .user-table td button:hover {
+  background-color: #bfd7b5;
+}
+
+.dark-mode .delete-user {
+  cursor: pointer;
+  background-color: #ff9999 !important;
+}
+
+.dark-mode .delete-user:hover {
+  text-decoration: underline;
+  background-color: #ffcccc !important;
 }
 
 /* Responsive Styles */
