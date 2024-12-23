@@ -6,6 +6,8 @@
 
 ### Kelas : RB
 
+### [Cara Menjalankan Web Server](#getting-started)
+
 ## Bagian 1 : Client-side Programming (Bobot: 30%)
 
 ### 1.1 Manipulasi DOM dengan JavaScript (15%)
@@ -469,3 +471,35 @@ $('.toggle-dark-mode').click(function() {
 - Toastr: Plugin jQuery untuk menampilkan notifikasi toast.
 
 - Font Awesome: Library ikon yang menyediakan berbagai ikon vektor yang dapat disesuaikan.
+
+## Getting Started
+
+- Clone Repository
+
+```sh
+git clone https://github.com/MuhammadFadilAtaullahRifqi122140205/uaspemweb.git
+
+```
+
+- Masuk Ke Folder uaspemweb
+
+```sh
+cd uaspemweb
+```
+
+- Jika Ingin Ubah Port, Ubah di .env dan docker-compse.yml
+
+```sh
+APP_URL=http://localhost
+```
+
+```yml
+ports:
+  - '80:80'
+```
+
+- Jalankan Docker
+
+```sh
+docker-compose up --build
+```
