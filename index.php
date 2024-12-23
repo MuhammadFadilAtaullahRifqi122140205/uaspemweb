@@ -203,6 +203,11 @@ $crsfToken = $authController->generateCsrfToken();
                 validateField($(this));
             });
 
+            // Event listener tambahan untuk blur
+            $("#userForm input, #userForm select").on("blur", function() {
+                validateField($(this));
+            });
+
             // Validasi register form ketika form di submit
             $("#userForm").on("submit", function(e) {
                 e.preventDefault();
