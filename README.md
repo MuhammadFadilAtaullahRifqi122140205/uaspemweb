@@ -31,7 +31,18 @@
     └── profile
 ```
 
-### [Cara Menjalankan Web Server](#getting-started)
+## Daftar Isi
+
+- [Kriteria Penilaian](#kriteria-penilaian)
+  - [1. Client-side Programming (30%)](#bagian-1--client-side-programming-bobot-30)
+  - [2. Server-side Programming (30%)](#bagian-2-server-side-programming-bobot-30)
+  - [3. Database Management (20%)](#bagian-3-database-management-bobot-20)
+  - [4. State Management (20%)](#bagian-4-state-management-bobot-20)
+  - [Bagian Bonus: Hosting Aplikasi Web (Bobot: 20%)](#bagian-bonus-hosting-aplikasi-web-bobot-20)
+- [Plugin dan library yang digunakan](#plugin-dan-library-yang-digunakan)
+- [Cara Menjalankan Web Server](#getting-started)
+
+# Kriteria Penilaian
 
 ## Bagian 1 : Client-side Programming (Bobot: 30%)
 
